@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>WhatsApp Chat Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #e5ddd5;
+            /* WhatsApp-like background */
+            margin: 0;
+            padding: 0;
+            color: #333;
+            /* Default text color */
+        }
+
+        h2 {
+            text-align: center;
+            padding: 15px;
+            background: #075e54;
+            /* WhatsApp dark green */
+            color: white;
+            margin: 0;
+            font-weight: normal;
+        }
+
+        #controls {
+            padding: 10px 15px;
+            background: #f0f0f0;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            /* Use flexbox for better alignment */
+            flex-wrap: wrap;
+            /* Allow wrapping on smaller screens */
+            gap: 10px;
+            /* Spacing between items */
+            align-items: center;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-grow: 1;
+            /* Allow text input to grow */
+        }
+
+        input[type="file"] {
+            flex-grow: 0;
+            /* Don't let file input grow too much */
+        }
+
+        button {
+            padding: 8px 15px;
+            background-color: #25D366;
+            /* WhatsApp green */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #128C7E;
+            /* Darker green on hover */
+        }
+
+
+        #chatContainer {
+            padding: 10px;
+            max-width: 800px;
+            /* Limit width for readability */
+            margin: 0 auto;
+            /* Center the container */
+        }
+
+        details {
+            background-color: #f9f9f9;
+            /* Slightly off-white for accordions */
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin: 10px 0;
+            /* Vertical margin only */
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            /* Prevents content bleed */
+        }
+
+        details[open] {
+            background-color: #fff;
+            /* White when open */
+        }
+
+
+        summary {
+            padding: 12px 15px;
+            background: #eee;
+            /* Lighter grey for summary */
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            border-bottom: 1px solid #e0e0e0;
+            list-style: none;
+            /* Remove default marker */
+            position: relative;
+        }
+
+        details[open] summary {
+            background: #e0e0e0;
+            /* Slightly darker when open */
+            border-bottom: 1px solid #ccc;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+            /* Hide default arrow on Chrome/Safari */
+        }
+
+        summary::before {
+            /* Custom arrow */
+            content: '▶';
+            font-size: 0.8em;
+            margin-right: 8px;
+            display: inline-block;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+
+        .message-container {
+            padding: 5px 15px;
+            /* Padding inside the day accordion */
+            display: flex;
+            /* Use flex for alignment */
+            flex-direction: column;
+            /* Stack messages vertically */
+        }
+
+        .msg {
+            max-width: 75%;
+            padding: 6px 12px;
+            border-radius: 7.5px;
+            margin-bottom: 4px;
+            font-size: 0.95em;
+            line-height: 1.4;
+            word-wrap: break-word;
+            position: relative;
+            box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+            /* Subtle shadow */
+        }
+
+        .sender {
+            background-color: #dcf8c6;
+            /* WhatsApp outgoing message bubble color */
+            align-self: flex-end;
+            /* Align to the right */
+            border-bottom-right-radius: 0;
+            /* Pointy corner */
+            margin-left: auto;
+            /* Push to right */
+        }
+
+        .receiver {
+            background-color: #00c4ff;
+                /* WhatsApp incoming message bubble color */
+                align-self: flex-start;
+            /* Align to the left */
+            border-bottom-left-radius: 0;
+            /* Pointy corner */
+            margin-right: auto;
+            /* Push to left */
+        }
+
+        .timestamp {
+            font-size: 0.7em;
+            color: #aaa;
+            /* Lighter grey for timestamp */
+            text-align: right;
+            margin-top: 3px;
+            display: block;
+            /* Ensure it takes its own space */
+            /* Removed absolute positioning for simplicity with flexbox */
+        }
+
+        .sender .timestamp {
+            color: #779167;
+            /* Timestamp color adjusted for sender bubble */
+        }
+
+
+        /* Simple highlight style for search */
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+
+        /* Add clearfix for potential floats if needed, though flexbox reduces need */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>WhatsApp Chat Viewer</h2>
+
+    <div id="controls">
+        <input type="file" id="chatFile" accept=".txt">
+        <input type="text" id="searchInput" placeholder="Search messages...">
+        <!-- Removed Export button as function not implemented -->
+        <!-- <button onclick="downloadFullPage()">Export Chat</button> -->
+    </div>
+
+    <div id="chatContainer"></div>
+
+    <script>
+        // --- Configuration ---
+        const senderName = "Mr. Alone"; // Set this to the name you want to style as the "sender"
+
+        // --- Global Variables ---
+        let originalMessages = []; // Holds all parsed messages
+        let currentlyDisplayedMessages = []; // Holds messages currently being shown (after potential filtering)
+
+        // --- Event Listeners ---
+        document.getElementById('chatFile').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const content = e.target.result;
+                originalMessages = parseChat(content);
+                currentlyDisplayedMessages = [...originalMessages]; // Initially display all
+                const grouped = groupMessages(currentlyDisplayedMessages);
+                renderChat(grouped);
+                // Clear search input on new file load
+                document.getElementById('searchInput').value = '';
+            };
+            reader.onerror = function (e) {
+                console.error("Error reading file:", e);
+                alert("Error reading file. See console for details.");
+            };
+            reader.readAsText(file);
+        });
+
+        // --- Search Functionality ---
+        document.getElementById('searchInput').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+
+            if (!searchTerm) {
+                // If search is empty, show all original messages
+                currentlyDisplayedMessages = [...originalMessages];
+            } else {
+                // Filter messages based on search term
+                currentlyDisplayedMessages = originalMessages.filter(msg => {
+                    const messageText = msg.message.toLowerCase();
+                    // Also check against the formatted date string used for grouping
+                    const messageDate = formatDate(msg.datetime).toLowerCase();
+                    return messageText.includes(searchTerm) || messageDate.includes(searchTerm);
+                });
+            }
+
+            // Re-group and re-render the filtered messages
+            const grouped = groupMessages(currentlyDisplayedMessages);
+            renderChat(grouped, searchTerm); // Pass searchTerm for highlighting
+        });
+
+
+        // --- Core Parsing Logic ---
+        function parseChat(text) {
+            const lines = text.split('\n');
+            const messages = [];
+            // Regex: Handles M/D/YY or M/D/YYYY, H:MM AM/PM. Allows flexible spacing (\s*) and potential unicode space (\u202F).
+            const regex = /^(\d{1,2})\/(\d{1,2})\/(\d{2,4}),\s*(\d{1,2}:\d{2})\s*([APap][Mm])\s*-\s*(.*?):\s*(.*)$/;
+            let currentMessage = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i]; // Process line by line
+                const match = line.match(regex);
+
+                if (match) {
+                    // --- New Message Line Detected ---
+
+                    // 1. Process the *previous* message (if one exists)
+                    if (currentMessage) {
+                        // Trim the completed message content BEFORE checking/adding
+                        currentMessage.message = currentMessage.message.trim();
+                        // **** FILTERING LOGIC ****
+                        // Add the previous message ONLY if it's not exactly "<Media omitted>"
+                        if (currentMessage.message !== "<Media omitted>") {
+                            messages.push(currentMessage);
+                        }
+                        // *************************
+                    }
+
+                    // 2. Start the *new* message based on the matched line
+                    let [_, month, day, year, time, ampm, sender, messageContent] = match;
+
+                    // Ensure year is 4 digits
+                    if (year.length === 2) {
+                        year = "20" + year;
+                    }
+
+                    // Construct date string for parsing
+                    const timeString = `${month}/${day}/${year} ${time} ${ampm.toUpperCase()}`;
+                    const datetime = new Date(timeString);
+
+                    // Basic check for invalid date
+                    if (isNaN(datetime.getTime())) {
+                        console.warn(`Skipping line due to invalid date format: ${line}`);
+                        currentMessage = null; // Invalidate current message context
+                        continue; // Skip to next line
+                    }
+
+                    currentMessage = {
+                        datetime: datetime,
+                        sender: sender.trim(), // Trim sender name
+                        // Start message content - DO NOT trim here yet, wait until full message is assembled
+                        message: messageContent
+                    };
+
+                } else if (currentMessage && line.trim().length > 0) {
+                    // --- Multi-line Continuation ---
+                    // This line doesn't start with a timestamp BUT we have an active message.
+                    // Append this line (including its original leading/trailing whitespace for this line)
+                    // Add a newline character to preserve structure.
+                    currentMessage.message += `\n${line}`;
+                } else {
+                    // --- Ignored Lines ---
+                    // - Before the first valid message timestamp.
+                    // - An empty line between messages.
+                    // - Doesn't belong to any message context (potentially malformed data).
+                }
+            }
+
+            // --- Process the very last message ---
+            if (currentMessage) {
+                // Trim the final assembled message content
+                currentMessage.message = currentMessage.message.trim();
+                // **** FILTERING LOGIC (Applied again for the last message) ****
+                if (currentMessage.message !== "<Media omitted>") {
+                    messages.push(currentMessage);
+                }
+                // *************************
+            }
+
+            return messages;
+        }
+
+        // --- Grouping Logic ---
+        function groupMessages(messagesToGroup) { // Accept the list of messages to group
+            const grouped = {};
+            messagesToGroup.forEach(msg => {
+                const y = msg.datetime.getFullYear();
+                const m = msg.datetime.toLocaleString('default', { month: 'long' });
+                const d = formatDate(msg.datetime); // Use custom consistent format "DD-Mon-YY"
+
+                // Ensure keys exist before assigning using || for broader compatibility than ??=
+                grouped[y] = grouped[y] || {};
+                grouped[y][m] = grouped[y][m] || {};
+                grouped[y][m][d] = grouped[y][m][d] || [];
+
+                grouped[y][m][d].push(msg);
+            });
+            return grouped;
+        }
+
+        // --- Rendering Logic ---
+        function renderChat(grouped, searchTerm = '') { // Accept searchTerm for highlighting
+            const container = document.getElementById('chatContainer');
+            container.innerHTML = ''; // Clear previous results
+
+            if (Object.keys(grouped).length === 0 && searchTerm) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">No messages found matching your search.</p>';
+                return;
+            }
+            if (Object.keys(grouped).length === 0 && !searchTerm) {
+                container.innerHTML = '<p style="text-align: center; padding: 20px;">No messages to display. Load a chat file.</p>';
+                return;
+            }
+
+
+            // --- Sorting ---
+            const sortedYears = Object.keys(grouped).sort((a, b) => b - a); // Descending years
+
+            for (const year of sortedYears) {
+                const months = grouped[year];
+                const yearAcc = createAccordion(year);
+                // Open latest year by default, or if searching, open all years containing results
+                yearAcc.open = (year === sortedYears[0] || searchTerm);
+
+                const monthOrder = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                const sortedMonths = Object.keys(months).sort((a, b) => monthOrder.indexOf(a) - monthOrder.indexOf(b)); // Chronological months
+
+                for (const month of sortedMonths) {
+                    const days = months[month];
+                    const monthAcc = createAccordion(month);
+                    // Open latest month of latest year, or if searching, open all months containing results
+                    monthAcc.open = ((year === sortedYears[0] && month === sortedMonths[sortedMonths.length - 1]) || searchTerm);
+
+                    const sortedDays = Object.keys(days).sort((a, b) => { // Chronological days
+                        const dateA = parseMyDateFormat(a);
+                        const dateB = parseMyDateFormat(b);
+                        return dateA - dateB; // Compare Date objects
+                    });
+
+                    for (const day of sortedDays) {
+                        const messages = days[day];
+                        const dayAcc = createAccordion(day);
+                        // Open latest day of latest month/year, or if searching, open all days containing results
+                        dayAcc.open = ((year === sortedYears[0] && month === sortedMonths[sortedMonths.length - 1] && day === sortedDays[sortedDays.length - 1]) || searchTerm);
+
+                        messages.forEach(msg => {
+                            const msgWrapper = document.createElement('div');
+                            msgWrapper.className = 'message-container';
+
+                            const msgDiv = document.createElement('div');
+                            msgDiv.className = 'msg ' + (msg.sender === senderName ? 'sender' : 'receiver');
+
+                            // --- Sanitize & Highlight ---
+                            let safeMessage = msg.message
+                                .replace(/&/g, "&")
+                                .replace(/</g, "<")
+                                .replace(/>/g, ">")
+                                .replace(/\n/g, '<br>'); // Convert newlines
+
+                            // Apply highlighting if searching
+                            if (searchTerm) {
+                                const regex = new RegExp(`(${searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')})`, 'gi'); // Escape special chars
+                                safeMessage = safeMessage.replace(regex, '<span class="highlight">$1</span>');
+                            }
+
+                            msgDiv.innerHTML = `
+                                ${safeMessage}
+                                <div class="timestamp">${msg.datetime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true })}</div>
+                            `;
+
+                            msgWrapper.appendChild(msgDiv);
+                            dayAcc.appendChild(msgWrapper); // Add message to the day accordion
+                        });
+
+                        // Only add day accordion if it actually has messages (check >1 because summary is always one child)
+                        if (dayAcc.childElementCount > 1) {
+                            monthAcc.appendChild(dayAcc);
+                        }
+                    }
+                    // Only add month accordion if it has days
+                    if (monthAcc.childElementCount > 1) {
+                        yearAcc.appendChild(monthAcc);
+                    }
+                }
+                // Only add year accordion if it has months
+                if (yearAcc.childElementCount > 1) {
+                    container.appendChild(yearAcc);
+                }
+            }
+        }
+
+        // --- Helper Functions ---
+        function createAccordion(label) {
+            const details = document.createElement('details');
+            // Default 'open' state is now handled within renderChat based on context (latest or search)
+            const summary = document.createElement('summary');
+            summary.textContent = label;
+            details.appendChild(summary);
+            return details;
+        }
+
+        function formatDate(date) {
+            // Creates a consistent "DD-Mon-YY" format like "14-Jan-24"
+            if (!(date instanceof Date) || isNaN(date)) {
+                return "Invalid Date"; // Handle invalid date input
+            }
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = date.toLocaleString('default', { month: 'short' }); // Jan, Feb, etc.
+            const year = String(date.getFullYear()).slice(-2); // Last 2 digits
+            return `${day}-${month}-${year}`;
+        }
+
+        function parseMyDateFormat(dateString) {
+            // Parses the "DD-Mon-YY" format created by formatDate, needed for sorting days
+            const parts = dateString.split('-'); // e.g., ["14", "Jan", "24"]
+            if (parts.length !== 3) return new Date(NaN); // Invalid format
+
+            const day = parseInt(parts[0], 10);
+            const monthStr = parts[1];
+            const year = parseInt("20" + parts[2], 10); // Assume 21st century
+
+            const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const monthIndex = monthNames.indexOf(monthStr);
+
+            if (isNaN(day) || isNaN(year) || monthIndex === -1) return new Date(NaN); // Invalid parts
+
+            // Note: Creating Date object with local time zone.
+            return new Date(year, monthIndex, day);
+        }
+
+        // Note: downloadFullPage function is not implemented.
+
+    </script>
+</body>
+
+</html>

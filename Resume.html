@@ -54,7 +54,7 @@
         }
 
         .sidebar h4 {
-            color: #00ffbd;
+            color: #41ff00;
             /* Gold color for section titles */
             margin-bottom: 10px;
         }
@@ -169,14 +169,14 @@
                         <li>MS SQL</li>
                         <li>HTML, CSS, Js and JQuery</li>
                         <li>Version Control - GitHub</li>
-                    </ul> 
+                    </ul>
                     <br>
 
                     <h4><i class="fas fa-certificate"></i> Certification</h4>
                     <hr>
                     <ul>
                         <li>Foundational C# Course - FreeCodeCamp</li>
-                    </ul> 
+                    </ul>
                     <br>
 
                     <h4><i class="fa-solid fa-gears"></i> Strengths</h4>
@@ -200,6 +200,10 @@
         </div>
         <button class="btn btn-export mt-3" onclick="exportPDF()"><i class="fas fa-file-download"></i> Export to
             PDF</button>
+        <button class="btn btn-secondary mt-3" onclick="downloadFullPage()"><i class="fas fa-file-download"></i>
+            Download
+            HTML</button>
+
     </div>
 
     <script>
@@ -209,9 +213,11 @@
 
             const resume = document.querySelector('.resume-container');
             const exportBtn = document.querySelector('.btn-export');
+            const dwnBtn = document.querySelector('.btn-secondary');
 
             // Hide the button before capturing
             exportBtn.style.display = 'none';
+            dwnBtn.style.display = 'none';
 
             html2canvas(resume, { scale: 2 }).then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
@@ -222,8 +228,29 @@
                 doc.save("VamsiG_Resume.pdf");
 
                 // Restore the button after exporting
-                exportBtn.style.display = 'block';
+                exportBtn.style.display = 'inline-block';
+                dwnBtn.style.display = 'inline-block';
             });
+        }
+
+        function downloadFullPage() {
+            // Clone the current document
+            const docClone = document.documentElement.cloneNode(true);
+
+            // Create a new doctype and wrap everything
+            const doctype = '<!DOCTYPE html>';
+            const html = doctype + '\n' + docClone.outerHTML;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'VamsiG_Resume.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 </body>
