@@ -5,770 +5,534 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vamsi - Portfolio</title>
+  <title>Vamsi G — Software Engineer</title>
+  <meta name="description" content="Vamsi G — Software Engineer specializing in .NET web development, database management and implementation.">
+  <meta name="color-scheme" content="dark light">
+  <meta property="og:title" content="Vamsi G — Software Engineer">
+  <meta property="og:description" content="Portfolio of Vamsi G, a Software Engineer specializing in .NET web development, database management and implementation.">
+  <meta property="og:type" content="website">
   <!--
-         - favicon
-         -->
+       - stop the browser from auto-restoring scroll position on refresh —
+       - otherwise Lenis just picks up smooth-scrolling from wherever that landed
+       -->
+  <script>
+    (function () {
+      try {
+        if ('scrollRestoration' in history) {
+          history.scrollRestoration = 'manual';
+        }
+        if (!window.location.hash) {
+          window.scrollTo(0, 0);
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+  <!--
+       - inline theme script — runs before first paint to avoid a flash of the wrong theme
+       -->
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('portfolio-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.style.colorScheme = theme;
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
   <link rel="shortcut icon" href="./assets/images/logo.ico" type="image/x-icon">
-  <!--
-         - custom css link
-         -->
   <link rel="stylesheet" href="./assets/css/style.css">
-  <!--
-         - google font link
-         -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-  <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+  <noscript>
+    <style>
+      [data-reveal], [data-hero-in] { opacity: 1 !important; transform: none !important; }
+    </style>
+  </noscript>
 </head>
 
 <body>
+
+  <!-- subtle full-page grain texture -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- scroll progress indicator -->
+  <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress-fill></span></div>
+
+  <!-- gradient cursor trail (progressive enhancement, fine-pointer only) — native pointer stays visible -->
+  <div class="cursor-trail" data-cursor-trail aria-hidden="true"></div>
+
   <!--
-         - #MAIN
-         -->
-  <main>
-    <!--
-            - #SIDEBAR
-            -->
-    <aside class="sidebar" data-sidebar>
-      <div class="sidebar-info">
-        <!-- <figure class="avatar-box">
-          <img src="./assets/images/my-avatar.jpg" alt="Om Kharche" width="80">
-        </figure> -->
-        <div class="info-content">
-          <h1 class="name" title="Om Kharche">Vamsi G</h1>
-          <p class="title">Software Engineer</p>
-        </div>
-        <button class="info_more-btn" data-sidebar-btn>
-          <span>Show Contacts</span>
-          <ion-icon name="chevron-down"></ion-icon>
+       - NAVBAR
+       -->
+  <header class="navbar" data-navbar>
+    <div class="navbar-inner">
+      <a href="#home" class="brand" data-section-link data-target="home" data-nav-close>
+        <span class="brand-mark">VG</span>
+        <span class="brand-name">Vamsi G</span>
+      </a>
+
+      <nav class="nav-links" data-nav-links>
+        <span class="nav-pill" data-nav-pill aria-hidden="true"></span>
+        <a href="#about" class="nav-link" data-section-link data-target="about">About</a>
+        <a href="#skills" class="nav-link" data-section-link data-target="skills">Skills</a>
+        <a href="#resume" class="nav-link" data-section-link data-target="resume">Resume</a>
+        <a href="#projects" class="nav-link" data-section-link data-target="projects">Projects</a>
+        <a href="#contact" class="nav-link" data-section-link data-target="contact">Contact</a>
+      </nav>
+
+      <div class="navbar-actions">
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark theme" aria-pressed="false" title="Toggle theme">
+          <ion-icon name="moon-outline" class="theme-icon theme-icon-dark"></ion-icon>
+          <ion-icon name="sunny-outline" class="theme-icon theme-icon-light"></ion-icon>
+        </button>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" data-menu-toggle>
+          <span></span><span></span><span></span>
         </button>
       </div>
-      <div class="sidebar-info_more">
-        <div class="separator"></div>
-        <ul class="contacts-list">
-          <li class="contact-item">
-            <div class="icon-box">
-              <ion-icon name="mail-outline"></ion-icon>
-            </div>
-            <div class="contact-info">
-              <p class="contact-title">Email</p>
-              <a href="mailto:vamsigone001@gmail.com" class="contact-link">Vamsigone001@gmail.com</a>
-            </div>
-          </li>
-          <li class="contact-item">
-            <div class="icon-box">
-              <ion-icon name="phone-portrait-outline"></ion-icon>
-            </div>
-            <div class="contact-info">
-              <p class="contact-title">Phone</p>
-              <a href="#" class="contact-link">+91 7842200665</a>
-            </div>
-          </li>
-          <li class="contact-item">
-            <div class="icon-box">
-              <ion-icon name="calendar-outline"></ion-icon>
-            </div>
-            <div class="contact-info">
-              <p class="contact-title">Birthday</p>
-              <time datetime="1982-06-23">28 December, 2001</time>
-            </div>
-          </li>
-          <li class="contact-item">
-            <div class="icon-box">
-              <ion-icon name="location-outline"></ion-icon>
-            </div>
-            <div class="contact-info">
-              <p class="contact-title">Location</p>
-              <address>Andhra Pradesh, India</address>
-            </div>
-          </li>
+    </div>
+  </header>
+
+  <!-- mobile menu overlay -->
+  <div class="mobile-menu" data-mobile-menu>
+    <nav class="mobile-menu-links">
+      <a href="#about" data-section-link data-target="about" data-nav-close>About</a>
+      <a href="#skills" data-section-link data-target="skills" data-nav-close>Skills</a>
+      <a href="#resume" data-section-link data-target="resume" data-nav-close>Resume</a>
+      <a href="#projects" data-section-link data-target="projects" data-nav-close>Projects</a>
+      <a href="#contact" data-section-link data-target="contact" data-nav-close>Contact</a>
+    </nav>
+    <ul class="mobile-menu-socials">
+      <li><a href="https://github.com/vamsiGone" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/vamsi-g-3a18ba278/" target="_blank" rel="noopener">LinkedIn</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <!--
+         - HERO
+         -->
+    <section class="hero" id="home">
+      <div class="hero-bg" aria-hidden="true">
+        <div class="hero-gradient"></div>
+        <canvas id="aurora-canvas"></canvas>
+        <div class="hero-vignette"></div>
+      </div>
+
+      <div class="hero-content">
+        <p class="eyebrow" data-hero-in>Available for opportunities</p>
+        <h1 class="hero-title">
+          <span class="hero-title-line" data-hero-in>Hi, I'm</span>
+          <span class="hero-title-line hero-title-name" data-hero-in>Vamsi&nbsp;G</span>
+        </h1>
+        <p class="hero-role" data-hero-in>
+          <span id="typewriter">Software Engineer</span><span class="cursor-blink" aria-hidden="true"></span>
+        </p>
+        <p class="hero-lede" data-hero-in>
+          I like understanding a problem properly, then building the system that solves it, start
+          to finish. The tools change from project to project — what matters to me is building
+          something that actually works for the people using it.
+        </p>
+        <div class="hero-actions" data-hero-in>
+          <a href="#projects" class="btn btn-primary" data-section-link data-target="projects">
+            <span>View Projects</span>
+            <ion-icon name="arrow-forward-outline"></ion-icon>
+          </a>
+          <a href="#contact" class="btn btn-ghost" data-section-link data-target="contact">Get in touch</a>
+        </div>
+        <ul class="hero-socials" data-hero-in>
+          <li><a href="https://github.com/vamsiGone" target="_blank" rel="noopener" aria-label="GitHub">
+            <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+          </a></li>
+          <li><a href="https://www.linkedin.com/in/vamsi-g-3a18ba278/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+          </a></li>
+          <li><a href="mailto:vamsigone001@gmail.com" aria-label="Email"><ion-icon name="mail-outline"></ion-icon></a></li>
         </ul>
-        <div class="separator"></div>
-        <ul class="social-list">
-          <li class="social-item">
-            <a href="https://github.com/vamsiGone" target="_blank" class="social-link">
-              <i class="devicon devicon-github-original-wordmark"></i>
-            </a>
+      </div>
+
+      <button class="scroll-cue" type="button" data-section-link data-target="about" aria-label="Scroll to About">
+        <span class="scroll-cue-mouse"><span></span></span>
+        <span class="scroll-cue-text">Scroll</span>
+      </button>
+    </section>
+
+    <!--
+         - ABOUT
+         -->
+    <section class="section" id="about">
+      <div class="section-inner">
+        <p class="eyebrow" data-reveal>Who I am</p>
+        <h2 class="section-title" data-reveal>About Me</h2>
+
+        <div class="about-grid">
+          <div class="about-text" data-reveal>
+            <p>I'm Vamsi, based in Andhra Pradesh, India. On paper I'm a
+              <strong>Software Engineer</strong> — but really, what I do is build things: web
+              applications, tools, systems, whatever the problem calls for.</p>
+            <p>I've worked across a few different domains, and the details are never the same
+              twice. What stays the same is how I work: understand the problem properly first,
+              then build something simple and reliable to solve it. That's what I'm actually good
+              at — not any one tool, but figuring things out and getting them done.</p>
+            <p>I care about the small things too — making sure the data is right, the system holds
+              up under real use, and it just works the way it's supposed to, without the person
+              using it having to think about it.</p>
+            <p>Give me a rough idea of what you need, and I'll turn it into something real —
+              something people actually want to use, not just something that technically works.</p>
+          </div>
+
+          <div class="about-stats glass-card" data-reveal>
+            <div class="stat">
+              <span class="stat-number" data-counter data-count-to="3">0</span><span class="stat-suffix">+</span>
+              <span class="stat-label">Years learning &amp; building</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-counter data-count-to="5">0</span>
+              <span class="stat-label">Production modules shipped</span>
+            </div>
+            <div class="stat">
+              <span class="stat-number" data-counter data-count-to="10">0</span><span class="stat-suffix">+</span>
+              <span class="stat-label">Technologies in daily use</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="services-grid">
+          <div class="service-card glass-card" data-reveal data-tilt>
+            <div class="service-icon"><ion-icon name="code-slash-outline"></ion-icon></div>
+            <h3>Building Applications</h3>
+            <p>Turning manual, paper-based work into web applications that are quick to learn and
+              easy to use every day.</p>
+          </div>
+          <div class="service-card glass-card" data-reveal data-tilt>
+            <div class="service-icon"><ion-icon name="server-outline"></ion-icon></div>
+            <h3>Managing Data</h3>
+            <p>Keeping data organized and accurate, so reports are fast and the numbers can
+              actually be trusted.</p>
+          </div>
+          <div class="service-card glass-card" data-reveal data-tilt>
+            <div class="service-icon"><ion-icon name="cloud-upload-outline"></ion-icon></div>
+            <h3>Getting It Live</h3>
+            <p>Taking a finished application live and keeping it running smoothly for the people
+              who depend on it.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--
+         - SKILLS
+         -->
+    <section class="section" id="skills">
+      <div class="section-inner">
+        <p class="eyebrow" data-reveal>Toolbox</p>
+        <h2 class="section-title" data-reveal>Skills &amp; Technologies</h2>
+
+        <ul class="skills-grid">
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-dot-net-plain-wordmark"></i>
+            <span>ASP.NET Framework<br><small>Web Forms &amp; Console Apps</small></span>
           </li>
-          <li class="social-item">
-            <a href="https://www.linkedin.com/in/vamsi-g-3a18ba278/" target="_blank" class="social-link">
-              <i class="devicon devicon-linkedin-plain"></i>
-            </a>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-dotnetcore-plain"></i>
+            <span>ASP.NET Core<br><small>MVC &amp; Web API</small></span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-csharp-plain-wordmark"></i>
+            <span>C#</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-microsoftsqlserver-plain-wordmark"></i>
+            <span>SQL Server</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-html5-plain"></i>
+            <span>HTML</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-css3-plain-wordmark"></i>
+            <span>CSS</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-bootstrap-plain-wordmark"></i>
+            <span>Bootstrap</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-javascript-plain colored"></i>
+            <span>JavaScript</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-jquery-plain-wordmark"></i>
+            <span>jQuery</span>
+          </li>
+          <li class="skill-chip glass-card" data-reveal data-tilt>
+            <i class="devicon devicon-github-original-wordmark"></i>
+            <span>GitHub</span>
           </li>
         </ul>
       </div>
-    </aside>
+    </section>
+
     <!--
-            - #main-content
-            -->
-    <div class="main-content">
-      <!--
-               - #NAVBAR
-               -->
-      <nav class="navbar">
-        <ul class="navbar-list">
-          <li class="navbar-item">
-            <button class="navbar-link  active" data-nav-link>About</button>
-          </li>
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Resume</button>
-          </li>
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Projects</button>
-          </li>
-          <!-- <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Blog</button>
-          </li> 
-          <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Contact</button>
-          </li>-->
-        </ul>
-      </nav>
-      <!--
-               - #ABOUT
-               -->
-      <article class="about  active" data-page="about">
-        <header>
-          <h2 class="h2 article-title">About me</h2>
-        </header>
-        <section class="about-text">
-          <p>I'm a <b>Software Engineer</b> from Andhra Pradesh, India, specializing in web development,
-            implementation and database management.
-          </p>
-          <p>
-            With a passion for technology and a commitment to creating user-friendly and efficient solutions, I have
-            been
-            instrumental in developing and managing websites for the education domain.
-          </p>
-          <p>
-            My expertise lies in building web applications that enable seamless registration processes,
-            comprehensive reporting, and efficient faculty management systems. I have a proven track record of
-            delivering projects that not only meet the functional requirements but also prioritize user experience.
-          </p>
-          <p>I take pride in turning complex requirements into intuitive and accessible solutions, ensuring that every
-            project I undertake is a true reflection of my dedication to excellence.</p>
-        </section>
-        <!--
-                  - service
-                  -->
-        <section class="service">
-          <h3 class="h3 service-title">What i'm doing</h3>
-          <ul class="service-list">
-            <li class="service-item">
-              <div class="service-icon-box">
-                <img src="./assets/images/icon-dev.svg" alt="Web development icon" width="40">
-              </div>
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">Web development</h4>
-                <p class="service-item-text">
-                  Automating the manual process of work, and developing the sites as per client requirements with
-                  user-friendly interface.
-                </p>
-              </div>
-            </li>
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="fa-solid fa-database fa-2xl" style="color: #FFD43B;"></i>
-              </div>
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">Database Management</h4>
-                <p class="service-item-text">
-                  Creating, Maintaining the user data, generating optimized queries for various business case reports
-                  needed using SQL Server
-                </p>
-              </div>
-            </li>
+         - RESUME
+         -->
+    <section class="section" id="resume">
+      <div class="section-inner">
+        <p class="eyebrow" data-reveal>Background</p>
+        <h2 class="section-title" data-reveal>Resume</h2>
 
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="fa-solid fa-cloud-arrow-down fa-2xl" style="color: #FFD43B;"></i>
-              </div>
-              <div class="service-content-box">
-                <h4 class="h4 service-item-title">Implementation</h4>
-                <p class="service-item-text">
-                  Creating, Managing and Hosting the web applications in the IIS.
-                </p>
-              </div>
-            </li>
+        <div class="timeline-grid">
+          <div class="timeline-col" data-reveal>
+            <div class="timeline-col-head">
+              <ion-icon name="school-outline"></ion-icon>
+              <h3>Education</h3>
+            </div>
+            <ol class="timeline" data-timeline>
+              <li class="timeline-item" data-reveal>
+                <h4>B.C.A — Vijayam PG and Degree College</h4>
+                <span class="timeline-date">2019 — 2022</span>
+                <p>Completed B.C.A (Bachelor of Computer Applications) with a CGPA of 8.6 in
+                  Chittoor, AP.</p>
+              </li>
+              <li class="timeline-item" data-reveal>
+                <h4>HSC — Vijayam Junior College</h4>
+                <span class="timeline-date">2017 — 2019</span>
+                <p>Completed HSC in the MPC stream with a CGPA of 9.63 in Chittoor, AP.</p>
+              </li>
+              <li class="timeline-item" data-reveal>
+                <h4>Sri Venkateswara Vidhyanikethan</h4>
+                <span class="timeline-date">2017</span>
+                <p>Completed 10th class with a CGPA of 9.7 in Penumuru, AP.</p>
+              </li>
+            </ol>
+          </div>
 
-          </ul>
-        </section>
+          <div class="timeline-col" data-reveal>
+            <div class="timeline-col-head">
+              <ion-icon name="briefcase-outline"></ion-icon>
+              <h3>Experience</h3>
+            </div>
+            <ol class="timeline" data-timeline>
+              <li class="timeline-item" data-reveal>
+                <h4>Software Engineer</h4>
+                <span class="timeline-date">Feb 2023 — Present</span>
+                <p>ISH Information Systems Pvt Ltd — Chennai.</p>
+              </li>
+            </ol>
+            <a href="./Resume.html" target="_blank" rel="noopener" class="btn btn-ghost resume-link">
+              <span>View Full Resume</span>
+              <ion-icon name="document-text-outline"></ion-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <!--Skills-->
-        <section class="skill">
-          <h3 class="h3 skills-title">My skills</h3>
-          <ul class="service-list">
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-dot-net-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  ASP.NET Framework (Web Forms & Console Applications)
-                </h5>
-              </div>
-            </li>
+    <!--
+         - PROJECTS
+         -->
+    <section class="section" id="projects">
+      <div class="section-inner">
+        <p class="eyebrow" data-reveal>Selected work</p>
+        <h2 class="section-title" data-reveal>Projects</h2>
 
-            <!-- <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-blazor-original"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  Blazor
-                </h5>
-              </div>
-            </li> -->
+        <div class="filter-pills" data-reveal>
+          <button class="filter-pill active" data-filter-btn>All</button>
+          <button class="filter-pill" data-filter-btn>.NET Framework</button>
+          <button class="filter-pill" data-filter-btn>.NET Core MVC</button>
+          <button class="filter-pill" data-filter-btn>.NET Core Web API</button>
+        </div>
 
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-dotnetcore-plain"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  ASP.NET Core (MVC & Web API)
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-csharp-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  C-Sharp
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-microsoftsqlserver-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  Microsoft SQL Server
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-html5-plain"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  HTML
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-css3-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  CSS
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-bootstrap-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  Bootstrap
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-javascript-plain colored"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  Javascript
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-jquery-plain-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  JQuery
-                </h5>
-              </div>
-            </li>
-
-            <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-github-original-wordmark"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  GitHub
-                </h5>
-              </div>
-            </li>
-
-            <!-- <li class="service-item">
-              <div class="service-icon-box">
-                <i class="devicon devicon-git-plain"></i>
-              </div>
-              <div class="service-content-box">
-                <h5 class="h5">
-                  git
-                </h5>
-              </div>
-            </li> -->
-
-          </ul>
-        </section>
-
-
-        <!--
-                  - testimonials
-                  -->
-        <!-- <section class="testimonials">
-          <h3 class="h3 testimonials-title">Testimonials</h3>
-          <ul class="testimonials-list has-scrollbar">
-            <li class="testimonials-item">
-              <div class="content-card" data-testimonials-item>
-                <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="60" data-testimonials-avatar>
-                </figure>
-                <h4 class="h4 testimonials-item-title" data-testimonials-title>Rohit Patil</h4>
-                <div class="testimonials-text" data-testimonials-text>
-                  <p>
-                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                    lot of experience
-                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                    consectetur adipiscing
-                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="testimonials-item">
-              <div class="content-card" data-testimonials-item>
-                <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/avatar-2.png" alt="Jessica miller" width="60" data-testimonials-avatar>
-                </figure>
-                <h4 class="h4 testimonials-item-title" data-testimonials-title>Dipti Sinha</h4>
-                <div class="testimonials-text" data-testimonials-text>
-                  <p>
-                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                    lot of experience
-                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                    consectetur adipiscing
-                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="testimonials-item">
-              <div class="content-card" data-testimonials-item>
-                <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/avatar-3.png" alt="Emily evans" width="60" data-testimonials-avatar>
-                </figure>
-                <h4 class="h4 testimonials-item-title" data-testimonials-title>Emily evans</h4>
-                <div class="testimonials-text" data-testimonials-text>
-                  <p>
-                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                    lot of experience
-                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                    consectetur adipiscing
-                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                  </p>
-                </div>
-              </div>
-            </li>
-            <li class="testimonials-item">
-              <div class="content-card" data-testimonials-item>
-                <figure class="testimonials-avatar-box">
-                  <img src="./assets/images/avatar-4.png" alt="Henry william" width="60" data-testimonials-avatar>
-                </figure>
-                <h4 class="h4 testimonials-item-title" data-testimonials-title>Henry william</h4>
-                <div class="testimonials-text" data-testimonials-text>
-                  <p>
-                    Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                    lot of experience
-                    and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                    consectetur adipiscing
-                    elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                  </p>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </section> -->
-        <!--
-                            - testimonials modal
-                            -->
-        <!-- <div class="modal-container" data-modal-container>
-          <div class="overlay" data-overlay></div>
-          <section class="testimonials-modal">
-            <button class="modal-close-btn" data-modal-close-btn>
-              <ion-icon name="close-outline"></ion-icon>
-            </button>
-            <div class="modal-img-wrapper">
-              <figure class="modal-avatar-box">
-                <img src="./assets/images/avatar-1.png" alt="Daniel lewis" width="80" data-modal-img>
+        <ul class="project-grid">
+          <li class="project-card active" data-filter-item data-category=".net framework" data-reveal
+              data-project-desc="Add a short 2–3 sentence overview of what Senate Master does and the problem it solves."
+              data-project-role="Add your role, e.g. Full-Stack Developer"
+              data-project-tags=".NET Framework, Add tech stack"
+              data-project-responsibilities="Add responsibility one|Add responsibility two|Add responsibility three">
+            <div class="project-card-inner">
+              <figure class="project-media">
+                <img src="./assets/images/project-1.jpg" alt="Senate Master" loading="lazy">
+                <span class="project-view"><ion-icon name="eye-outline"></ion-icon></span>
               </figure>
-              <img src="./assets/images/icon-quote.svg" alt="quote icon">
-            </div>
-            <div class="modal-content">
-              <h4 class="h3 modal-title" data-modal-title>Daniel lewis</h4>
-              <time datetime="2021-06-14">14 June, 2021</time>
-              <div data-modal-text>
-                <p>
-                  Richard was hired to create a corporate identity. We were very pleased with the work done. She has a
-                  lot of experience
-                  and is very concerned about the needs of client. Lorem ipsum dolor sit amet, ullamcous cididt
-                  consectetur adipiscing
-                  elit, seds do et eiusmod tempor incididunt ut laborels dolore magnarels alia.
-                </p>
+              <div class="project-info">
+                <h3>Senate Master</h3>
+                <p>.NET Framework</p>
               </div>
             </div>
-          </section>
-        </div> -->
-      </article>
-      <!--
-               - #RESUME
-               -->
-      <article class="resume" data-page="resume">
-        <header>
-          <h2 class="h2 article-title">Resume</h2>
-        </header>
-        <section class="timeline">
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-            <h3 class="h3">Education</h3>
-          </div>
-          <ol class="timeline-list">
-            <li class="timeline-item">
-              <h4 class="h4 timeline-item-title">B.C.A - Vijayam PG and Degree College</h4>
-              <span>2019 — 2022</span>
-              <p class="timeline-text">
-                Completed B.C.A (Bachelor of Computer Applications) with a CGPA 8.6 in Chittoor, AP.
-              </p>
-            </li>
-            <li class="timeline-item">
-              <h4 class="h4 timeline-item-title">HSC - Vijayam Junior College</h4>
-              <span>2017 — 2019</span>
-              <p class="timeline-text">
-                Completed my HSC in the stream MPC with CGPA of 9.63 in Chittoor, AP.
-              </p>
-            </li>
-            <li class="timeline-item">
-              <h4 class="h4 timeline-item-title">Sri Venkateswara Vidhyanikethan</h4>
-              <span>2017</span>
-              <p class="timeline-text">
-                Completed my 10th class with CGPA 9.7 in Penumuru, AP.
-              </p>
-            </li>
-          </ol>
-        </section>
-        <section class="timeline">
-          <div class="title-wrapper">
-            <div class="icon-box">
-              <ion-icon name="book-outline"></ion-icon>
-            </div>
-            <h3 class="h3">Experience</h3>
-          </div>
-          <ol class="timeline-list">
-            <li class="timeline-item">
-              <h2 class="h4">Software Engineer</h2>
-              <span class="h4">ISH Information Sytems Pvt Ltd - Chennai</span>
-              <h3 class="h5 timeline-item-title">Feb 2023 — Present</h3>
-            </li>
-          </ol>
-          <br><br>
-          <a href="./Resume.html" target="_blank" class="btn btn-primary">View Resume</a>
-        </section>
-
-      </article>
-      <!--
-               - #PORTFOLIO
-               -->
-      <article class="portfolio" data-page="projects">
-        <header>
-          <h2 class="h2 article-title">Projects</h2>
-        </header>
-        <section class="projects">
-          <ul class="filter-list">
-            <li class="filter-item">
-              <button class="active" data-filter-btn>All</button>
-            </li>
-            <li class="filter-item">
-              <button data-filter-btn>.NET Framework</button>
-            </li>
-            <li class="filter-item">
-              <button data-filter-btn>.NET Core MVC</button>
-            </li>
-            <li class="filter-item">
-              <button data-filter-btn>.NET Core Web API</button>
-            </li>
-
-          </ul>
-          <div class="filter-select-box">
-            <button class="filter-select" data-select>
-              <div class="select-value" data-selecct-value>Select category</div>
-              <div class="select-icon">
-                <ion-icon name="chevron-down"></ion-icon>
+          </li>
+          <li class="project-card active" data-filter-item data-category=".net framework" data-reveal
+              data-project-desc="Add a short 2–3 sentence overview of what Senate OAMS does and the problem it solves."
+              data-project-role="Add your role, e.g. Full-Stack Developer"
+              data-project-tags=".NET Framework, Add tech stack"
+              data-project-responsibilities="Add responsibility one|Add responsibility two|Add responsibility three">
+            <div class="project-card-inner">
+              <figure class="project-media">
+                <img src="./assets/images/project-2.png" alt="Senate OAMS" loading="lazy">
+                <span class="project-view"><ion-icon name="eye-outline"></ion-icon></span>
+              </figure>
+              <div class="project-info">
+                <h3>Senate OAMS</h3>
+                <p>.NET Framework</p>
               </div>
-            </button>
-            <ul class="select-list">
-              <li class="select-item">
-                <button data-select-item>All</button>
-              </li>
-              <li class="select-item">
-                <button data-select-item>.NET Framework</button>
-              </li>
-              <li class="select-item">
-                <button data-filter-btn>.NET Core MVC</button>
-              </li>
-              <li class="select-item">
-                <button data-filter-btn>.NET Core Web API</button>
-              </li>
-            </ul>
-          </div>
-          <ul class="project-list">
-            <li class="project-item  active" data-filter-item data-category=".net framework">
-              <a href="#">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-                  <img src="./assets/images/project-1.jpg" alt="finance" loading="lazy">
-                </figure>
-                <h3 class="project-title">Senate Master</h3>
-                <p class="project-category">.NET Framework</p>
-              </a>
-            </li>
-            <li class="project-item  active" data-filter-item data-category=".net framework">
-              <a href="#">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-                  <img src="./assets/images/project-2.png" alt="orizon" loading="lazy">
-                </figure>
-                <h3 class="project-title">Senate OAMS</h3>
-                <p class="project-category">.NET Framework</p>
-              </a>
-            </li>
-            <li class="project-item  active" data-filter-item data-category=".net framework">
-              <a href="#">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-                  <img src="./assets/images/project-7.png" alt="summary" loading="lazy">
-                </figure>
-                <h3 class="project-title">Admissions Module</h3>
-                <p class="project-category">.NET Framework</p>
-              </a>
-            </li>
-            <li class="project-item  active" data-filter-item data-category=".net framework">
-              <a href="#">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-                  <img src="./assets/images/project-9.png" alt="arrival" loading="lazy">
-                </figure>
-                <h3 class="project-title">Faculty Management System</h3>
-                <p class="project-category">.NET Framework</p>
-              </a>
-            </li>
-
-            <li class="project-item  active" data-filter-item data-category=".net core mvc">
-              <a href="#">
-                <figure class="project-img">
-                  <div class="project-item-icon-box">
-                    <ion-icon name="eye-outline"></ion-icon>
-                  </div>
-                  <img src="./assets/images/project-9.png" alt="arrival" loading="lazy">
-                </figure>
-                <h3 class="project-title">Ticketing System</h3>
-                <p class="project-category">.NET Core MVC</p>
-              </a>
-            </li>
-          </ul>
-        </section>
-      </article>
-      <!--
-               - #BLOG
-               -->
-      <!-- <article class="blog" data-page="blog">
-        <header>
-          <h2 class="h2 article-title">Blog</h2>
-        </header>
-        <section class="blog-posts">
-          <ul class="blog-posts-list">
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-1.jpg" alt="Design conferences in 2022" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">Design conferences in 2022</h3>
-                  <p class="blog-text">
-                    Veritatis et quasi architecto beatae vitae dicta sunt, explicabo.
-                  </p>
-                </div>
-              </a>
-            </li>
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-2.jpg" alt="Best fonts every designer" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">Best fonts every designer</h3>
-                  <p class="blog-text">
-                    Sed ut perspiciatis, nam libero tempore, cum soluta nobis est eligendi.
-                  </p>
-                </div>
-              </a>
-            </li>
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-3.jpg" alt="Design digest #80" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">Design digest #80</h3>
-                  <p class="blog-text">
-                    Excepteur sint occaecat cupidatat no proident, quis nostrum exercitationem ullam corporis suscipit.
-                  </p>
-                </div>
-              </a>
-            </li>
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-4.jpg" alt="UI interactions of the week" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">UI interactions of the week</h3>
-                  <p class="blog-text">
-                    Enim ad minim veniam, consectetur adipiscing elit, quis nostrud exercitation ullamco laboris nisi.
-                  </p>
-                </div>
-              </a>
-            </li>
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-5.jpg" alt="The forgotten art of spacing" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">The forgotten art of spacing</h3>
-                  <p class="blog-text">
-                    Maxime placeat, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  </p>
-                </div>
-              </a>
-            </li>
-            <li class="blog-post-item">
-              <a href="#">
-                <figure class="blog-banner-box">
-                  <img src="./assets/images/blog-6.jpg" alt="Design digest #79" loading="lazy">
-                </figure>
-                <div class="blog-content">
-                  <div class="blog-meta">
-                    <p class="blog-category">Design</p>
-                    <span class="dot"></span>
-                    <time datetime="2022-02-23">Fab 23, 2022</time>
-                  </div>
-                  <h3 class="h3 blog-item-title">Design digest #79</h3>
-                  <p class="blog-text">
-                    Optio cumque nihil impedit uo minus quod maxime placeat, velit esse cillum.
-                  </p>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </section>
-      </article> -->
-      <!--
-               - #CONTACT
-               -->
-      <!-- <article class="contact" data-page="contact">
-        <header>
-          <h2 class="h2 article-title">Contact</h2>
-        </header>
-        <section class="mapbox" data-mapbox>
-          <figure>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199666.5651251294!2d-121.58334177520186!3d38.56165006739519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac672b28397f9%3A0x921f6aaa74197fdb!2sSacramento%2C%20CA%2C%20USA!5e0!3m2!1sen!2sbd!4v1647608789441!5m2!1sen!2sbd"
-              width="400" height="300" loading="lazy"></iframe>
-          </figure>
-        </section>
-        <section class="contact-form">
-          <h3 class="h3 form-title">Contact Form</h3>
-          <form action="#" class="form" data-form>
-            <div class="input-wrapper">
-              <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
-              <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
             </div>
-            <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
-            <button class="form-btn" type="submit" disabled data-form-btn>
-              <ion-icon name="paper-plane"></ion-icon>
-              <span>Send Message</span>
-            </button>
-          </form>
-        </section>
-      </article> -->
-    </div>
+          </li>
+          <li class="project-card active" data-filter-item data-category=".net framework" data-reveal
+              data-project-desc="Add a short 2–3 sentence overview of what the Admissions Module does and the problem it solves."
+              data-project-role="Add your role, e.g. Full-Stack Developer"
+              data-project-tags=".NET Framework, Add tech stack"
+              data-project-responsibilities="Add responsibility one|Add responsibility two|Add responsibility three">
+            <div class="project-card-inner">
+              <figure class="project-media">
+                <img src="./assets/images/project-7.png" alt="Admissions Module" loading="lazy">
+                <span class="project-view"><ion-icon name="eye-outline"></ion-icon></span>
+              </figure>
+              <div class="project-info">
+                <h3>Admissions Module</h3>
+                <p>.NET Framework</p>
+              </div>
+            </div>
+          </li>
+          <li class="project-card active" data-filter-item data-category=".net framework" data-reveal
+              data-project-desc="Add a short 2–3 sentence overview of what the Faculty Management System does and the problem it solves."
+              data-project-role="Add your role, e.g. Full-Stack Developer"
+              data-project-tags=".NET Framework, Add tech stack"
+              data-project-responsibilities="Add responsibility one|Add responsibility two|Add responsibility three">
+            <div class="project-card-inner">
+              <figure class="project-media">
+                <img src="./assets/images/project-9.png" alt="Faculty Management System" loading="lazy">
+                <span class="project-view"><ion-icon name="eye-outline"></ion-icon></span>
+              </figure>
+              <div class="project-info">
+                <h3>Faculty Management System</h3>
+                <p>.NET Framework</p>
+              </div>
+            </div>
+          </li>
+          <li class="project-card active" data-filter-item data-category=".net core mvc" data-reveal
+              data-project-desc="Add a short 2–3 sentence overview of what the Ticketing System does and the problem it solves."
+              data-project-role="Add your role, e.g. Full-Stack Developer"
+              data-project-tags=".NET Core MVC, Add tech stack"
+              data-project-responsibilities="Add responsibility one|Add responsibility two|Add responsibility three">
+            <div class="project-card-inner">
+              <figure class="project-media">
+                <img src="./assets/images/project-9.png" alt="Ticketing System" loading="lazy">
+                <span class="project-view"><ion-icon name="eye-outline"></ion-icon></span>
+              </figure>
+              <div class="project-info">
+                <h3>Ticketing System</h3>
+                <p>.NET Core MVC</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!--
+         - CONTACT
+         -->
+    <section class="section" id="contact">
+      <div class="section-inner">
+        <p class="eyebrow" data-reveal>Let's talk</p>
+        <h2 class="section-title" data-reveal>Get In Touch</h2>
+        <p class="section-lede" data-reveal>
+          Have a project in mind or an opportunity to discuss? My inbox is always open.
+        </p>
+
+        <div class="contact-grid">
+          <a class="contact-cta glass-card" href="mailto:vamsigone001@gmail.com" data-reveal data-tilt>
+            <ion-icon name="mail-outline"></ion-icon>
+            <div>
+              <span class="contact-cta-label">Email me</span>
+              <span class="contact-cta-value">vamsigone001@gmail.com</span>
+            </div>
+            <ion-icon name="arrow-forward-outline" class="contact-cta-arrow"></ion-icon>
+          </a>
+
+          <div class="contact-details">
+            <div class="contact-detail glass-card" data-reveal data-tilt>
+              <ion-icon name="call-outline"></ion-icon>
+              <div>
+                <span class="contact-cta-label">Phone</span>
+                <a href="tel:+917842200665">+91 78422 00665</a>
+              </div>
+            </div>
+            <div class="contact-detail glass-card" data-reveal data-tilt>
+              <ion-icon name="location-outline"></ion-icon>
+              <div>
+                <span class="contact-cta-label">Location</span>
+                <address>Andhra Pradesh, India</address>
+              </div>
+            </div>
+            <div class="contact-detail glass-card" data-reveal data-tilt>
+              <ion-icon name="share-social-outline"></ion-icon>
+              <div>
+                <span class="contact-cta-label">Elsewhere</span>
+                <div class="contact-social-links">
+                  <a href="https://github.com/vamsiGone" target="_blank" rel="noopener">GitHub</a>
+                  <a href="https://www.linkedin.com/in/vamsi-g-3a18ba278/" target="_blank" rel="noopener">LinkedIn</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p>&copy; <span data-year></span> Vamsi G. Built with care.</p>
+      <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top">
+        <ion-icon name="arrow-up-outline"></ion-icon>
+      </button>
+    </div>
+  </footer>
+
+  <!-- project detail modal (shared, populated on card click) -->
+  <div class="project-modal-overlay" data-project-modal-overlay aria-hidden="true">
+    <div class="project-modal" data-project-modal data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="project-modal-title" tabindex="-1">
+      <button class="project-modal-close" type="button" data-project-modal-close aria-label="Close project details">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+      <div class="project-modal-media">
+        <img data-project-modal-img src="" alt="">
+      </div>
+      <div class="project-modal-body">
+        <p class="project-modal-eyebrow" data-project-modal-category></p>
+        <h3 id="project-modal-title" data-project-modal-title></h3>
+        <p class="project-modal-desc" data-project-modal-desc></p>
+
+        <div class="project-modal-section">
+          <h4>Tech Stack</h4>
+          <ul class="project-modal-tags" data-project-modal-tags></ul>
+        </div>
+
+        <div class="project-modal-section">
+          <h4>Role</h4>
+          <p class="project-modal-role" data-project-modal-role></p>
+        </div>
+
+        <div class="project-modal-section">
+          <h4>Key Responsibilities</h4>
+          <ul class="project-modal-responsibilities" data-project-modal-responsibilities></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!--
-         - custom js link
-         -->
+       - scripts
+       -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="./assets/js/aurora-bg.js"></script>
   <script src="./assets/js/script.js"></script>
-  <!--
-         - ionicon link
-         -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
